@@ -1,48 +1,66 @@
-/** @NotOnlyCurrentDoc */
 
-//Selecionar planilha e linha ativa. Gera uma array para os links
-function abrirDocumentos() {
+function acessarPlanilha() {
   var planilha = SpreadsheetApp.getActiveSpreadsheet();
   var aba = planilha.getActiveSheet();
   var linha = aba.getActiveRange().getRow();
   var links = [];
 
-//Selecionar cada link
-  for (var coluna = 22; coluna <= 25; coluna++) {
-    var linkDoc = aba.getRange(linha, coluna).getValue();
+  coletarLinks(linha, links, aba)
+}
 
-    //Separar em caso de virgulas 
-    if (linkDoc) {
-      var linkDocVirgula = linkDoc.split(',');
-      linkDocVirgula.forEach(function(link) {
-        links.push(link.trim());
-      });
-    }
-    }
+//Bloco para capturar os links, alterar o valor de 'coluna' com base na planilha
+function coletarLinks(linha, links, aba) {
+  cellContent = []
+  for (var coluna = 15; coluna <= 16; coluna++) {
+    cellContent.push(aba.getRange(linha, coluna).getValue());
+  }
+  var coluna = 18;
+  cellContent.push(aba.getRange(linha, coluna).getValue());
+
+  var coluna = 20;
+  cellContent.push(aba.getRange(linha, coluna).getValue());
+
+  tratarLinks(cellContent, links)
+}
   
-  for (var coluna = 27; coluna <= 30; coluna++) {
-    var linkDoc = aba.getRange(linha, coluna).getValue();
-    if (linkDoc) {
-      var linkDocVirgula = linkDoc.split(',');
-      linkDocVirgula.forEach(function(link) {
-        links.push(link.trim());
-      });
-    }
-    }
-  
-//Abrir os documentos no navegador
+  //Bloco para separar o links por vírgulas e inserir em 'cellLinks" 
+function tratarLinks(cellContent, links){
+  cellLinks = [];
+  cellContent.forEach(content => {
+    if (content) {
+      cellLinks.push(content.split(','))
+    };
+  });
+  cellLinks.forEach((link) => {
+    links.push(link);
+  });
+
+  abrirDocumentos(links);
+}
+
+//Bloco para criar o script dos documentos
+function abrirDocumentos(links) {
   var page = '<script>';
-  links.forEach(function(link) {
+
+  links.forEach((link) => {
     page += 'window.open("' + link + '");';
   });
+
   page += 'google.script.host.close();</script>';
- 
- //Caixa de diálogo
+
+  mostrarTela(page)
+}
+
+//Bloco para abrir os documentos nas abas
+function mostrarTela(page) {
   var interface = HtmlService
     .createHtmlOutput(page)
     .setSandboxMode(HtmlService.SandboxMode.IFRAME)
     .setWidth(1)
-    .setHeight(1);   
+    .setHeight(1);
+
   SpreadsheetApp.getUi().showModalDialog(interface, 'Abrindo documentos...');
+
+  Logger.log(page)
 
 }
