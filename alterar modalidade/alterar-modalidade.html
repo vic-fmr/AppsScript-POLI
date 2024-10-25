@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+</head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Poppins;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    /* Define a altura para 100% da viewport */
+    text-align: center;
+  }
+
+  form {
+    font-size: 20px;
+    display: inline-block;
+  }
+
+  form .inputs {
+    width: 250px;
+    margin: 10px 5px;
+    font-size: 20px;
+    text-align: center;
+    border: 2px inset;
+  }
+
+  form label {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: auto;
+    font-weight: bold;
+  }
+
+  form #button {
+    border: 1px solid white;
+    background-color: darkblue;
+    color: white;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border 0.2s ease-in-out;
+    font-size: 24px;
+    margin-top: 20px;
+    width: 100px;
+  }
+
+  form #button:hover,
+  #button:focus {
+    border: 1px solid black;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+  }
+
+  h1 {
+    display: none;
+  }
+</style>
+
+<body>
+  <form id="form">
+    <label for="modalidade">Nova Modalidade:
+      <select id="modalidade" class="inputs">
+        <option value="">Selecione a Nova Modalidade</option>
+        <option value="Não obrigatório">Não obrigatório</option>
+        <option value="Obrigatório">Obrigatório</option>
+      </select>
+    </label>
+
+    <label for="data-inicio">Data de Inicio:
+      <input type="date" id="data-inicio" class="inputs">
+    </label>
+
+    <label for="data-final">Data Final:
+      <input type="date" id="data-final" class="inputs">
+    </label>
+
+    <label for="horario">Novo Horário:
+      <input type="text" id="horario" class="inputs">
+    </label>
+
+    <label for="novo-orientador">Novo Orientador:
+        <input type="text" id="novo-orientador" class="inputs">
+    </label>
+
+    <label for="novo-supervisor">Novo Supervisor:
+        <input type="text" id="novo-supervisor" class="inputs">
+    </label>
+
+    <label for="bolsa">Nova Bolsa:
+        <input type="number" id="bolsa" class="inputs">
+    </label>
+
+    <input type="submit" value="Enviar" id="button" onclick="enviarDados(event)">
+  </form>
+  <h1 id="atualizando">Atualizando dados...<h1>
+
+
+
+      <script>
+        function enviarDados(event) {
+          event.preventDefault(); 
+   
+          let formulario = document.getElementById("form");
+          let atualizando = document.getElementById("atualizando");
+
+          let modalidade = document.getElementById("modalidade").value;
+          let dataInicio = document.getElementById("data-inicio").value;
+          let dataFinal = document.getElementById("data-final").value;
+          let horario = document.getElementById("horario").value;
+          let novoOrientador = document.getElementById("novo-orientador").value;
+          let novoSupervisor = document.getElementById("novo-supervisor").value;
+          let bolsa = document.getElementById("bolsa").value;
+          
+          let dataFinalAnterior = null
+          console.log(dataFinal)
+          
+          
+          // Manipulação da data
+          let data = new Date(dataInicio);
+          data.setDate(data.getDate());
+
+          let dia = String(data.getDate()).padStart(2, '0');
+          let mes = String(data.getMonth() + 1).padStart(2, '0');
+          let ano = data.getFullYear();
+
+          dataFinalAnterior = `${dia}-${mes}-${ano}`;
+          
+
+          console.log(dataFinal)
+
+          formulario.style.display = "none";
+          atualizando.style.display = "block";
+
+          // Envia os dados para o Google Apps Script
+          google.script.run.withSuccessHandler(function() {
+          google.script.host.close();
+          }).alterarModalidade(modalidade, dataInicio, dataFinal, horario, dataFinalAnterior, novoOrientador, novoSupervisor, bolsa);
+        }
+
+    
+      </script>
+</body>
+
+</html>

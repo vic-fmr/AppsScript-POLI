@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+</head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    font-family: Poppins;
+  }
+
+  body {
+    text-align: center;
+  }
+
+  form {
+    text-align: center;
+    font-size: 24px;
+  }
+
+  form #preenchendo_notas {
+    display: none;
+  }
+
+  form .inputs {
+    width: 40px;
+    margin-right: 30px;
+    font-size: 24px;
+    text-align: center;
+    border: 3px inset;
+  }
+
+  form #button {
+    border: none;
+    background-color: darkblue;
+    color: white;
+    transition: transform 0.2s ease-in-out;
+    font-size: 24px;
+    margin-top: 20px;
+    width: 100px
+  }
+
+  form #button:hover,
+  #button:focus {
+    border: 1px solid black;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    transform: scale(1.1)
+  }
+</style>
+
+<body>
+  <form id="myForm">
+    <label for="nota_supervisor">1º Nota - Supervisor:</label>
+    <input type="number" id="nota_supervisor" class="inputs">
+
+    <label for="nota_orientador">2º Nota - Orientador:</label>
+    <input type="number" id="nota_orientador" class="inputs">
+
+    <input type="button" value="Enviar" id="button" onclick="enviarDados()">
+    <h1 id="preenchendo_notas">Preenchendo notas...<h1>
+  </form>
+
+
+
+  <script>
+    function enviarDados() {
+        let formulario = document.getElementById("myForm")
+        let preenchendo = document.getElementById("preenchendo_notas")
+
+        let nota_supervisor = document.getElementById("nota_supervisor");
+        let nota_orientador = document.getElementById("nota_orientador");
+        let nota_supervisorValor = nota_supervisor.value;
+        let nota_orientadorValor = nota_orientador.value;
+
+        if(nota_orientadorValor > 10 || nota_orientadorValor < 0){
+          nota_orientador.style.border = "1px solid red";
+        }
+        
+        if(nota_supervisorValor > 10 || nota_supervisorValor < 0){
+          nota_supervisor.style.border = "1px solid red"
+        }else{
+        // Envia os dados para o Google Apps Script
+        formulario.style.display = "none";
+        preenchendo.style.display = "block";
+        google.script.run.withSuccessHandler(function() {
+          google.script.host.close(); // Fecha o diálogo após o envio
+        }).receberDados(nota_supervisorValor, nota_orientadorValor);
+        }
+        }
+  
+  </script>
+</body>
+
+</html>
