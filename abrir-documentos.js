@@ -1,9 +1,9 @@
 
 function acessarPlanilha() {
-  var planilha = SpreadsheetApp.getActiveSpreadsheet();
-  var aba = planilha.getActiveSheet();
-  var linha = aba.getActiveRange().getRow();
-  var links = [];
+  let planilha = SpreadsheetApp.getActiveSpreadsheet();
+  let aba = planilha.getActiveSheet();
+  let linha = aba.getActiveRange().getRow();
+  let links = [];
 
   coletarLinks(linha, links, aba)
 }
@@ -11,15 +11,12 @@ function acessarPlanilha() {
 //Bloco para capturar os links, alterar o valor de 'coluna' com base na planilha
 function coletarLinks(linha, links, aba) {
   cellContent = []
-  for (var coluna = 15; coluna <= 16; coluna++) {
+  for (let coluna = 15; coluna <= 20; coluna++) {
+    if (coluna == 17 || coluna == 19) { //Pular essas colunas
+      continue;
+    }
     cellContent.push(aba.getRange(linha, coluna).getValue());
   }
-  var coluna = 18;
-  cellContent.push(aba.getRange(linha, coluna).getValue());
-
-  var coluna = 20;
-  cellContent.push(aba.getRange(linha, coluna).getValue());
-
   tratarLinks(cellContent, links)
 }
   
@@ -40,7 +37,7 @@ function tratarLinks(cellContent, links){
 
 //Bloco para criar o script dos documentos
 function abrirDocumentos(links) {
-  var page = '<script>';
+  let page = '<script>';
 
   links.forEach((link) => {
     page += 'window.open("' + link + '");';
@@ -53,7 +50,7 @@ function abrirDocumentos(links) {
 
 //Bloco para abrir os documentos nas abas
 function mostrarTela(page) {
-  var interface = HtmlService
+  let interface = HtmlService
     .createHtmlOutput(page)
     .setSandboxMode(HtmlService.SandboxMode.IFRAME)
     .setWidth(1)
