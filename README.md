@@ -11,4 +11,5 @@ Códigos desenvolvidos por meio da extensão <strong style = "text-decoration: u
 
 <ul>
 <li>Testar através da IDE interna do Googles Sheets - Extensão Apps Script</li>
+<li>Scripts sujeitos á alterações e melhorias</li>
 </ul>
